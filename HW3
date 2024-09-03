@@ -266,10 +266,9 @@ void getForces()
             Force[i].z -= k * howMuch;
         }
 
-        // making the balls bounce off eachother
+        // Making the balls bounce off eachother
         for (int j = i + 1; j < NUMBER_OF_BALLS; j++)
         {
-            // Calculate distance between balls
             float dx = Position[i].x - Position[j].x;
             float dy = Position[i].y - Position[j].y;
             float dz = Position[i].z - Position[j].z;
@@ -290,17 +289,17 @@ void getForces()
                 // Calculate dot product of relative velocity and normal
                 float vRelNorm = relVelocity.x * normal.x + relVelocity.y * normal.y + relVelocity.z * normal.z;
 
-                // Skip if the balls are moving apart
+                // Making sure the balls are moving apart
                 if (vRelNorm > 0) continue;
 
-                // Coefficient of restitution (elasticity)
+                // The amount of KE that is maintained
                 float e = 0.8; // Adjust as needed
 
-                // Calculate impulse scalar
+                // Calculate impulse 
                 float massSum = SphereMass + SphereMass;
                 float impulse = (-(1 + e) * vRelNorm) / massSum;
 
-                // Update velocities based on impulse
+                // Making the balls change direction
                 Velocity[i].x += impulse * normal.x * SphereMass;
                 Velocity[i].y += impulse * normal.y * SphereMass;
                 Velocity[i].z += impulse * normal.z * SphereMass;
