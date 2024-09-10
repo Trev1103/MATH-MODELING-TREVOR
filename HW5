@@ -30,8 +30,8 @@ int Trace;
 int Pause;
 
 float MassUnitConverter = 1.0; //kg
-float LengthUnitConverter = 1.0; //km
-float TimeUnitConverter = 1.0; //hr
+float LengthUnitConverter = 940.0; //km
+float TimeUnitConverter = 1.011; //hr
 float GavityConstant = 6.67430e-11 / (LengthUnitConverter*LengthUnitConverter*LengthUnitConverter)*(TimeUnitConverter*TimeUnitConverter); //This is how the get the correct units for gravity constant
 // Window globals
 static int Window;
@@ -116,8 +116,8 @@ void setInitailConditions()
 	// Set your convertion units then print them out.
 	// Uncomment these and fix them.
 	MassUnitConverter = 1.0; // kg
-	LengthUnitConverter = 1.0; // km
-	TimeUnitConverter = 1.0; // hr
+	LengthUnitConverter = 940.0; // km
+	TimeUnitConverter = 1.011; // hr
 	printf("\n MassUnitConverter = %f kilograms", MassUnitConverter);
 	printf("\n LengthUnitConverter = %f kilometers", LengthUnitConverter);
 	printf("\n TimeUnitConverter = %f hours", TimeUnitConverter);
@@ -131,7 +131,7 @@ void setInitailConditions()
 	// ??????????????????????????????????????????????????????????
 	// Anything with a mass, time or length needs to be thought about.
 	// Coment about each of these. Most will may not need to be changed but just say why.
-	SphereDiameter = 0.5;
+	SphereDiameter = 1.0;
 	sphereRadius = SphereDiameter/2.0;
 	SphereMass = 1.0;
 	BoxSideLength = 5.0;
@@ -200,7 +200,7 @@ void setInitailConditions()
 	
 	// ?????????????????????????????????????????
 	// Make this a 10 day long run
-	TotalRunTime = 10*24; //10 days for 24 hours 
+	TotalRunTime = 240/TimeUnitConverter; //10 days for 24 hours 
 	RunTime = 0.0;
 	Dt = 0.001;
 }
