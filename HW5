@@ -142,7 +142,7 @@ void setInitailConditions()
 	// Print out how many kilometers long each box side is.
 	// Print out how many kilometers/hour the max Velocity is.
 	// Uncomment these and fix them.
-	printf("\n Box side length = %f kilometers", BoxSideLength);
+	printf("\n Box side length = %f kilometers", BoxSideLength); 
 	printf("\n Max velocity = %f kilometers/hour", MaxVelocity);
 	
 	
@@ -189,9 +189,9 @@ void setInitailConditions()
 		randomNumber = ((float)rand()/(float)RAND_MAX);
 		randomNumber = ((float)rand()/(float)RAND_MAX);
 		randomNumber = ((float)rand()/(float)RAND_MAX);
-	Color[i].x = 0.6 + ((float)rand()/(float)RAND_MAX) * 0.4;
-        Color[i].y = 0.4 + ((float)rand()/(float)RAND_MAX) * 0.4;
-        Color[i].z = 0.2 + ((float)rand()/(float)RAND_MAX) * 0.4;
+	Color[i].x = 0.6;
+        Color[i].y = 0.3;
+        Color[i].z = 0.1;
 		
 		Force[i].x = 0.0;
 		Force[i].y = 0.0;
@@ -200,7 +200,7 @@ void setInitailConditions()
 	
 	// ?????????????????????????????????????????
 	// Make this a 10 day long run
-	TotalRunTime = 10*24;
+	TotalRunTime = 10*24; //10 days for 24 hours 
 	RunTime = 0.0;
 	Dt = 0.001;
 }
@@ -351,18 +351,18 @@ Force[j].z += magnitude*(dz/d);
 			
 			// ???????????????????????????????????????????????????????
 			// Add gravity between asteroids here.
-			 for(int j = 0; j < i; j++)
+			 for(int j = 0; j < i; j++) //loop to make sure we use every pair of asteroids once
         {
             dx = Position[j].x - Position[i].x;
             dy = Position[j].y - Position[i].y;
             dz = Position[j].z - Position[i].z;
             r_squared = dx*dx + dy*dy + dz*dz;
-            if (r_squared > 0.0 && r_squared < 100.0) // Add a cutoff to prevent infinite forces
+            if (r_squared > 0.0 && r_squared < 100.0) // makes sure asteroids are in a reasonable range of eachother
             {
                 d = sqrt(r_squared);
-                gravitationalForce = G * (SphereMass * SphereMass) / r_squared;
+                gravitationalForce = G * (SphereMass * SphereMass) / r_squared; //Newtons law of gravity 
 
-                // Force components
+                // Force distributed to all directions
                 float force_x = gravitationalForce * (dx / d);
                 float force_y = gravitationalForce * (dy / d);
                 float force_z = gravitationalForce * (dz / d);
@@ -420,7 +420,7 @@ void nBody()
 	drawPicture();
 	// ??????????????????????????????????????????????
 	// Print the time out in hours.
-	printf("\n Time = %f hours ???", RunTime);
+	printf("\n Time = %f hours ", RunTime);
 	RunTime += Dt;
 	
 	if(TotalRunTime < RunTime)
