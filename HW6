@@ -377,6 +377,7 @@ void terminalPrint()
 	//BOLD_OFF   "\e[m"
 	system("clear");
 	printf("\n Z/z: Move in move out");
+	printf("\n Z/z: Move in move out");
 	printf("\n Move up with a");
 	printf("\n Move down with w");
 	printf("\n Move left with s");
