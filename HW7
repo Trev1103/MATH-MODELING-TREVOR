@@ -285,14 +285,13 @@ void getForces()
 {
 	// ????????????????????????????????????????????
 	// These are a new variable you will use when making the asteroids collide inelastically. 
-
-	float kSphereReduction = 0.8;
+	float inOut;
+	float kSphereReduction;
 	float dvx, dvy, dvz;
 	float kSphere;
 	float sphereRadius = SphereDiameter/2.0;
 	float d,dx, dy, dz;
 	float magnitude;
-
 	
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -323,50 +322,25 @@ void getForces()
 					printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
 					exit(0);
 				}
-				magnitude = kSphere*(SphereDiameter - d);
-				// Doling out the force in the proper perfortions using unit vectors.
-				Force[i].x -= magnitude*(dx/d);
-				Force[i].y -= magnitude*(dy/d);
-				Force[i].z -= magnitude*(dz/d);
-				// A force on me causes the opposite force on you. 
-				Force[j].x += magnitude*(dx/d);
-				Force[j].y += magnitude*(dy/d);
-				Force[j].z += magnitude*(dz/d);
-				float inOut = (SphereDiameter - d) / 2.0;
-				 if (inOut > 0)
-              				{
-                    				float overlapCorrection = inOut;
-				
-                				Position[i].x -= overlapCorrection * (dx / d);
-						Position[i].y -= overlapCorrection * (dy / d);
-						Position[i].z -= overlapCorrection * (dz / d);
 
-						Position[j].x += overlapCorrection * (dx / d);
-						Position[j].y += overlapCorrection * (dy / d);
-						Position[j].z += overlapCorrection * (dz / d);
-					}
 
-						// Calculate relative velocity
+				kSphereReduction = 0.25;
 				dvx = Velocity[j].x - Velocity[i].x;
 				dvy = Velocity[j].y - Velocity[i].y;
 				dvz = Velocity[j].z - Velocity[i].z;
+				magnitude = kSphere*(SphereDiameter - d);
+				inOut = dvx * dx + dvy * dy + dvz * dz;
 
-				// Calculate normal vector
-				float nx = dx / d;
-				float ny = dy / d;
-				float nz = dz / d;
+				if (inOut > 0) magnitude = kSphereReduction * magnitude;
+              				
 
-				// Calculate the relative velocity component in the normal direction
-				float vn = dvx * nx + dvy * ny + dvz * nz;
-
-				// Apply a simple bounce effect (reverses the normal component of velocity)
-				Velocity[i].x += vn * nx * kSphereReduction;
-				Velocity[i].y += vn * ny * kSphereReduction;
-				Velocity[i].z += vn * nz * kSphereReduction;
-
-				Velocity[j].x -= vn * nx * kSphereReduction;
-				Velocity[j].y -= vn * ny * kSphereReduction;
-				Velocity[j].z -= vn * nz * kSphereReduction;
+					Force[i].x -= magnitude*(dx/d);
+					Force[i].y -= magnitude*(dy/d);
+					Force[i].z -= magnitude*(dz/d);
+					
+					Force[j].x += magnitude*(dx/d);
+					Force[j].y += magnitude*(dy/d);
+					Force[j].z += magnitude*(dz/d);
 			}
 			
 			// This adds the gravity between asteroids.
