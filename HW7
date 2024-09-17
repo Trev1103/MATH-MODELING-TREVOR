@@ -212,8 +212,8 @@ void setInitailConditions()
         {
         //generate sphere coord
         radius = ((float)rand() / (float)RAND_MAX) * maxSphereSize; // Random radius within the sphere
-            angle1 = ((float)rand() / (float)RAND_MAX) * 2.0 * PI; // Random azimuthal angle
-            angle2 = ((float)rand() / (float)RAND_MAX) * PI; // Random polar angle
+            angle1 = ((float)rand() / (float)RAND_MAX) * 2.0 * PI; // Random angle in xy plane
+            angle2 = ((float)rand() / (float)RAND_MAX) * PI; // Random angle z plane
 
             Position[i].x = radius * sin(angle2) * cos(angle1);
             Position[i].y = radius * sin(angle2) * sin(angle1);
