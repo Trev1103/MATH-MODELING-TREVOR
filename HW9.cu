@@ -89,7 +89,7 @@ void KeyPressed(unsigned char key, int x, int y)
 	  if (key == 'f')
               {
               float targetX = 25.0; // Wall position
-              float forceMagnitude = 23.0; // Adjust for how strong you want the push
+              float forceMagnitude = 15.0; // Adjust for how strong you want the push
 
               for (int i = 0; i < NUMBER_OF_BALLS; i++)
               {
@@ -243,7 +243,7 @@ void setInitailConditions()
 	maxSphereSize = 10.0*SphereDiameter;
 	
 	// You get to pick this but it is nice to print it out in common units to get a feel for what it is.
-	MaxVelocity = 1.0;
+	MaxVelocity = 2.0;
 	printf("\n Max velocity = %f kilometers/hour or %f miles/hour", MaxVelocity*LengthUnitConverter/TimeUnitConverter, (MaxVelocity*LengthUnitConverter/TimeUnitConverter)*0.621371);
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -394,7 +394,8 @@ void getForces()
 	float sphereRadius = SphereDiameter/2.0;
 	float d, dx, dy, dz;
 	float magnitude;
-	const float sphereReplusionScalar = 10;
+	float sphereReplusionScalar = 9;
+	float boxSide = 5;
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
@@ -404,42 +405,22 @@ void getForces()
 	}
 	
 	kSphere = 1000.0;
-	kSphereReduction = 0.5;
+	kSphereReduction = 0.6;
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{	
 		// ?????????????????????????????????????????????????????
 		// Make the asteroids inelastically bounce off the wall.
 		if (Position[i].x >= 25.0 - sphereRadius) // Adjust for radius of the sphere
                       {
-                          // Position the ball at the wall
-                          Position[i].x = 25.0 - sphereRadius;
-
-                          // Apply inelastic collision: reduce the x-velocity
-                          Velocity[i].x *= -kSphereReduction; // Adjust kSphereReduction for different bounce effects
+                         if (Position[i].y <= boxSide && Position[i].y >= -boxSide &&
+            Position[i].z <= boxSide && Position[i].z >= -boxSide)
+        {
+            // Apply inelastic collision: reduce the x-velocity
+            Velocity[i].x *= -kSphereReduction; // Adjust kSphereReduction for different bounce effects
+        }
                       }
 
-                      // Check for wall limits in y and z (assuming your wall spans from y = -5.0 to 5.0 and z = -5.0 to 5.0)
-                      if (Position[i].y <= -5.0 + sphereRadius) // Bottom wall
-                      {
-                          Position[i].y = -5.0 + sphereRadius;
-                          Velocity[i].y *= -kSphereReduction;
-                      }
-                      else if (Position[i].y >= 5.0 - sphereRadius) // Top wall
-                      {
-                          Position[i].y = 5.0 - sphereRadius;
-                          Velocity[i].y *= -kSphereReduction;
-                      }
                       
-                      if (Position[i].z <= -5.0 + sphereRadius) // Back wall
-                      {
-                          Position[i].z = -5.0 + sphereRadius;
-                          Velocity[i].z *= -kSphereReduction;
-                      }
-                      else if (Position[i].z >= 5.0 - sphereRadius) // Front wall
-                      {
-                          Position[i].z = 5.0 - sphereRadius;
-                          Velocity[i].z *= -kSphereReduction;
-                      }
         
 		
 		
