@@ -95,12 +95,12 @@ void KeyPressed(unsigned char key, int x, int y)
               {
                   // Calculate the direction towards the wall
                   float dx = targetX - Position[i].x;
-                  float distance = sqrt(dx * dx); 
+                  float d = sqrt(dx * dx); 
 
                   // Normalize direction vector and apply force
-                  if (distance > 0)
+                  if (d > 0)
                   {
-                      Velocity[i].x += forceMagnitude * (dx / distance);
+                      Velocity[i].x += forceMagnitude * (dx / d;
                   }
               }
 
