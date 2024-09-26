@@ -389,11 +389,11 @@ void getForces()
 	float inOut;
 	float kSphere,kSphereReduction;
 	float kWall, kWallReduction;
-	float4 D, d, unit, dv;
-	float magnitude;
-	float intersectionArea; 
+	float4 D, d, unit, dv, temp1;
+	float magnitude; 
 	float sphereRadius = SphereDiameter/2.0;
-  float QuadRepul;
+  	float QuadraticRepulsion;
+	float P;
 	
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -433,7 +433,9 @@ void getForces()
 			d.y = Position[j].y - Position[i].y;
 			d.z = Position[j].z - Position[i].z;
 			d.w = sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
-      D.w = d.x*d.x + d.y*d.y + d.z*d.z;
+     			D.w = d.x*d.x + d.y*d.y + d.z*d.z;
+			temp1 = D.w*D.w-d.w*d.w;
+			P = kSphere;
 			unit.x = d.x/d.w;
 			unit.y = d.y/d.w;
 			unit.z = d.z/d.w;
@@ -449,7 +451,6 @@ void getForces()
 					exit(0);
 				}
 				
-				intersectionArea = kSphere*(PI/4.0)*(SphereDiameter*SphereDiameter - d.w*d.w);
 				//make ksphere pressure
 				dv.x = Velocity[j].x - Velocity[i].x;
 				dv.y = Velocity[j].y - Velocity[i].y;
@@ -458,8 +459,8 @@ void getForces()
 				
 				// ??????????????????????????????????????????????
 				// Make this be a quadratic repulsion model.. 
-       
-				if(inOut < 0.0) magnitude = kSphere*(SphereDiameter- d.w); // If inOut is negative the sphere are converging.
+       				QuadraticRepulsion = P*(PI/4.0)*(temp1);
+				if(inOut < 0.0) magnitude = QuadraticRepulsion; // If inOut is negative the sphere are converging.
 				else magnitude = kSphereReduction*kSphere*(SphereDiameter- d.w); // If inOut is positive the sphere are diverging.
 				
 				// Doling out the force in the proper perfortions using unit vectors.
