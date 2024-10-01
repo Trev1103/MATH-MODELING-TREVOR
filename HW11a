@@ -1,4 +1,4 @@
-//nvcc QuadraticRepulsionBroken.cu -o bounce -lglut -lm -lGLU -lGL																													
+//nvcc HW11a.cu -o bounce -lglut -lm -lGLU -lGL																													
 //To stop hit "control c" in the window you launched it from.
 #include <iostream>
 #include <fstream>
@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 30
+#define NUMBER_OF_BALLS 20
 #define PI 3.14159
 using namespace std;
 
@@ -224,7 +224,7 @@ void setInitailConditions()
 	maxSphereSize = 10.0*SphereDiameter;
 	
 	// You get to pick this but it is nice to print it out in common units to get a feel for what it is.
-	MaxVelocity = 1.0;
+	MaxVelocity = 0.50;
 	printf("\n Max velocity = %f kilometers/hour or %f miles/hour", MaxVelocity*LengthUnitConverter/TimeUnitConverter, (MaxVelocity*LengthUnitConverter/TimeUnitConverter)*0.621371);
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -389,11 +389,10 @@ void getForces()
 	float inOut;
 	float kSphere,kSphereReduction;
 	float kWall, kWallReduction;
-	float4 D, d, unit, dv, temp1;
+	float4 d, unit, dv;
 	float magnitude; 
 	float sphereRadius = SphereDiameter/2.0;
-  	float QuadraticRepulsion;
-	float P;
+	float QuadRepul;
 	
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -433,9 +432,7 @@ void getForces()
 			d.y = Position[j].y - Position[i].y;
 			d.z = Position[j].z - Position[i].z;
 			d.w = sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
-     			D.w = d.x*d.x + d.y*d.y + d.z*d.z;
-			temp1 = D.w*D.w-d.w*d.w;
-			P = kSphere;
+	
 			unit.x = d.x/d.w;
 			unit.y = d.y/d.w;
 			unit.z = d.z/d.w;
@@ -445,23 +442,24 @@ void getForces()
 			{
 				// If the seperation gets too small the sphers may go through each other.
 				// If you are ok with that you do not need this line.
+				
 				if(d.w < sphereRadius/10.0)
 				{
 					printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
 					exit(0);
 				}
 				
-				//make ksphere pressure
+				
 				dv.x = Velocity[j].x - Velocity[i].x;
 				dv.y = Velocity[j].y - Velocity[i].y;
 				dv.z = Velocity[j].z - Velocity[i].z;
 				inOut = d.x*dv.x + d.y*dv.y + d.z*dv.z;
 				
 				// ??????????????????????????????????????????????
-				// Make this be a quadratic repulsion model.. 
-       				QuadraticRepulsion = P*(PI/4.0)*(temp1);
-				if(inOut < 0.0) magnitude = QuadraticRepulsion; // If inOut is negative the sphere are converging.
-				else magnitude = kSphereReduction*kSphere*(SphereDiameter- d.w); // If inOut is positive the sphere are diverging.
+				// Make this be a quadratic repulsion model..
+				QuadRepul = (PI/4.0)*(SphereDiameter*SphereDiameter-(d.w*d.w))*kSphere;
+				if(inOut < 0.0) magnitude = QuadRepul; // If inOut is negative the sphere are converging.
+				else magnitude = kSphereReduction*QuadRepul; // If inOut is positive the sphere are diverging.
 				
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*unit.x;
