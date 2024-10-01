@@ -456,7 +456,7 @@ void getForces()
 				// Make this be an an ideal gas repulsion model.. 
         			IdealGasRepulsion = kSphere*(PI/24.0)*(2.0*SphereDiameter*SphereDiameter*SphereDiameter + 3.0*SphereDiameter*SphereDiameter*d.w -d.w*d.w*d.w);;
 				    if(inOut < 0.0) magnitude = IdealGasRepulsion; // If inOut is negative the sphere are converging.
-				    else magnitude = kSphereReduction*IdealGasRepulsion; // If inOut is positive the sphere are diverging.
+				    else magnitude = kSphereReduction*kSphere*(SphereDiameter - d); // If inOut is positive the sphere are diverging.
 				
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*unit.x;
