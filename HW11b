@@ -1,4 +1,4 @@
-//nvcc IdealGasRepulsionBroken.cu -o bounce -lglut -lm -lGLU -lGL																													
+//nvcc HW11b.cu -o bounce -lglut -lm -lGLU -lGL																													
 //To stop hit "control c" in the window you launched it from.
 #include <iostream>
 #include <fstream>
@@ -391,10 +391,8 @@ void getForces()
 	float kWall, kWallReduction;
 	float4 D, d, unit, dv;
 	float magnitude;
-	float intersectionArea, bodyVolume; 
 	float sphereRadius = SphereDiameter/2.0;
-  float IdealGasRepulsion;
-	float4 temp1, temp2
+  	float IdealGasRepulsion;
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
@@ -433,9 +431,6 @@ void getForces()
 			d.y = Position[j].y - Position[i].y;
 			d.z = Position[j].z - Position[i].z;
 			d.w = sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
-      D.w = d.x*d.x + d.y*d.y + d.z*d.z;
-      temp1 = D.w*D.w-d.w*d.w;
-      temp2 = (2*D.w*D.w*D.w)+(3*D.w*D.w*d.w)-(d.w*d.w*d.w);
 			unit.x = d.x/d.w;
 			unit.y = d.y/d.w;
 			unit.z = d.z/d.w;
@@ -451,8 +446,7 @@ void getForces()
 					exit(0);
 				}
 				
-				intersectionArea = (PI/4.0)*(SphereDiameter*SphereDiameter - d.w*d.w);
-				bodyVolume = (PI/24.0)*(2.0*SphereDiameter*SphereDiameter*SphereDiameter + 3.0*SphereDiameter*SphereDiameter*d.w -d.w*d.w*d.w);
+
 				
 				dv.x = Velocity[j].x - Velocity[i].x;
 				dv.y = Velocity[j].y - Velocity[i].y;
@@ -460,9 +454,9 @@ void getForces()
 				inOut = d.x*dv.x + d.y*dv.y + d.z*dv.z;
 				// ??????????????????????????????????????????????
 				// Make this be an an ideal gas repulsion model.. 
-        IdealGasRepulsion = (c*6*temp1)/(temp2);
-				    if(inOut < 0.0) magnitude = IdealGasReplusion; // If inOut is negative the sphere are converging.
-				    else magnitude = kSphereReduction*kSphere*(SphereDiameter- d.w); // If inOut is positive the sphere are diverging.
+        			IdealGasRepulsion = kSphere*(PI/24.0)*(2.0*SphereDiameter*SphereDiameter*SphereDiameter + 3.0*SphereDiameter*SphereDiameter*d.w -d.w*d.w*d.w);;
+				    if(inOut < 0.0) magnitude = IdealGasRepulsion; // If inOut is negative the sphere are converging.
+				    else magnitude = kSphereReduction*IdealGasRepulsion; // If inOut is positive the sphere are diverging.
 				
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*unit.x;
