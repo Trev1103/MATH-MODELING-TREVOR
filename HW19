@@ -448,7 +448,7 @@ void getForces()
 {
 	float inOut;
 	float kSphere,kSphereReduction;
-	float kWall, kWallReduction;
+	//float kWall, kWallReduction;
 	float4 d, unit, dv;
 	float magnitude;
 	float intersectionArea; 
